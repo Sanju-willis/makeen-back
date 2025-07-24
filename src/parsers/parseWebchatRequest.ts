@@ -12,7 +12,7 @@ export const parseWebchatRequest = async ({
   const timestamp = Date.now();
   const messageId = `webchat-${userId || timestamp}-${++idCounter}`;
 
-  const fallbackId = userId || "Anonymous";
+  const fallbackId =  "Anonymous";
 
   const user = {
     id: userId,

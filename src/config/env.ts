@@ -1,26 +1,27 @@
 // src\config\env.ts
 import "dotenv/config";
+import { EnvError } from "../errors/Errors";
 
-const requiredEnv = [
-  "OPENAI_API_KEY",
-  "GOOGLE_CLIENT_EMAIL",
-  "GOOGLE_PRIVATE_KEY",
-  "DATABASE_URL",
-  "PORT",
-  "HOST",
-];
+const getEnv = (key: string): string => {
+  const value = process.env[key];
+  if (!value) throw new EnvError(key);
+  return value;
+};
 
-for (const key of requiredEnv) {
-  if (!process.env[key]) {
-    throw new Error(`❌ ${key} is missing in .env`);
-  }
-}
+// ✅ Required
+export const OPENAI_API_KEY = getEnv("OPENAI_API_KEY");
+export const GOOGLE_CLIENT_EMAIL = getEnv("GOOGLE_CLIENT_EMAIL");
+export const GOOGLE_PRIVATE_KEY = getEnv("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n");
+export const DATABASE_URL = getEnv("DATABASE_URL");
 
-// 🔓 Individual named exports
-export const OPENAI_API_KEY = process.env.OPENAI_API_KEY!;
-export const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL!;
-export const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, "\n");
+export const PHONE_NUMBER_ID = getEnv("WHATSAPP_PHONE_NUMBER_ID");
+export const WHATSAPP_ACCESS_TOKEN = getEnv("WHATSAPP_ACCESS_TOKEN");
+export const WHATSAPP_VERIFY_TOKEN = getEnv("WHATSAPP_VERIFY_TOKEN");
 
-export const DATABASE_URL = process.env.DATABASE_URL!;
-export const PORT = parseInt(process.env.PORT!, 10);
-export const HOST = process.env.HOST!;
+export const MESSENGER_VERIFY_TOKEN = getEnv("MESSENGER_VERIFY_TOKEN");
+// ✅ Optional with defaults
+export const PORT = parseInt(process.env.PORT || "3000", 10);
+export const HOST = process.env.HOST || "0.0.0.0";
+
+export const FB_PAGE_ACCESS_TOKEN = getEnv("FB_PAGE_ACCESS_TOKEN");
+export const FB_GRAPH_API = "https://graph.facebook.com/v23.0";

@@ -15,7 +15,7 @@ export type ParsedWebchatMessage = {
   user: {
     id: string;
     name: string;
-    platform: "webchat";
+    platform: "webchat" | "whatsapp"; // <-- allow both
   };
   message: {
     msgType: "text" | "image" | "audio" | "video" | "unsupported";
@@ -24,7 +24,10 @@ export type ParsedWebchatMessage = {
     buffer?: Buffer;
     mimeType?: string;
     filename?: string;
-    timestamp: number;
+    timestamp?: number;
     messageId: string;
+    mediaId?: string;
+    
   };
 };
+

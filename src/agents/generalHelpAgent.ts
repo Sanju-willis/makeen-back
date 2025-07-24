@@ -11,8 +11,9 @@ export const getGeneralHelpAgent = async (
   sessionId: string,
 ) => {
   const memory = getSessionMemory(sessionId);
-console.log("Creating general help agent with memory:", memory);
-  const systemPrompt = `
+console.log("general help agent memory:", memory, sessionId);
+ 
+const systemPrompt = `
 You are a helpful and polite customer service assistant for a bookstore.
 Always answer clearly. Use tools only when necessary.
 If unsure, say you don't know instead of making something up.

@@ -13,11 +13,13 @@ const model = new ChatOpenAI({
 export const getBookInquiryAgent = async (sessionId: string) => {
   const memory = getSessionMemory(sessionId);
   const context = (memory as any).__context || {};
-  console.log("Creating book inquiry agent with memory:", memory);
+
+  console.log("Book inquiry agent memory:", memory);
+
   const currentBook = {
-    title: context.bookTitle,
-    author: context.author,
-  };
+  title: context.title,
+  author: context.author,
+};
 
   const prevBook = (memory as any).__bookContext;
 

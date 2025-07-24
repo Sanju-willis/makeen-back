@@ -9,7 +9,32 @@ export class AppError extends Error {
     this.name = name;
   }
 }
+export class BaseError extends Error {
+  public readonly name: string;
+  public readonly httpCode: number;
+  public readonly isOperational: boolean;
 
+  constructor(
+    name: string,
+    httpCode = 500,
+    description = "Internal Server Error",
+    isOperational = true
+  ) {
+    super(description);
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = name;
+    this.httpCode = httpCode;
+    this.isOperational = isOperational;
+    Error.captureStackTrace(this);
+  }
+}
+
+// 🔧 System & Environment Errors
+export class EnvError extends BaseError {
+  constructor(description = "Invalid or missing environment variable") {
+    super("EnvError", 500, description, false);
+  }
+}
 export class BadRequestError extends AppError {
   constructor(message = "Bad Request") {
     super(message, 400, "BadRequestError");

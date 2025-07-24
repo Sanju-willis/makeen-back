@@ -19,40 +19,49 @@ Analyze the user's message and return:
 
 Respond ONLY in raw JSON. Use this format:
 
-{{{{ 
+{{{{
   "intent": {{
-    "type": "book_inquiry" | "order_status" | "complaint" | "general_help" | "unknown",
+    "type": "book_inquiry" | "book_recommendation" | "order_status" | "complaint" | "general_help" | "unknown",
     "confidence": float (0 to 1)
   }},
   "content": {{
     "type": "book" | "receipt" | "text_only" | "unknown",
     "data": {{
       // If content.type === "book":
-      "title": "string",
-      "author": "string",
-      "publisher": "string (optional)",
-      "isbn": "string (optional)"
+    "title": "book title (e.g., Atomic Habits)",
+    "author": "book author (e.g., James Clear)",
+    "publisher": "book publisher (optional)",
+    "isbn": "book ISBN number (optional)",
 
-      // If content.type === "receipt":
+      // If intent.type === "book_recommendation":
+      "recommendationTopic": "string",            // e.g., 'productivity', 'fiction', etc.
+      "preferredGenres": ["string", ...] (optional),
+      "preferredAuthors": ["string", ...] (optional),
+
+      // If content.type === "receipt" or intent === "order_status":
       "orderId": "string",
-      "name": "string",
-      "email": "string",
-      "date": "YYYY-MM-DD",
-      "total": "Rs. amount",
-      "items": ["item name", "item name", ...] (optional)
+      "customerName": "string",
+      "customerEmail": "string",
+      "purchaseDate": "YYYY-MM-DD",
+      "orderTotal": "Rs. amount",
+      "purchasedItems": ["item name", ...] (optional),
 
-      // If complaint:
-      "complaintText": "string"
+      // If intent.type === "complaint":
+      "complaintText": "string",
+      "customerName": "string",
+      "customerEmail": "string",
+      "complaintDate": "YYYY-MM-DD" (optional)
     }}
   }}
 }}}}
 
 Valid intents:
-- book_inquiry
-- order_status
-- complaint
-- general_help
-- unknown
+- book_inquiry (user wants info about a specific book)
+- book_recommendation (user asks for suggestions)
+- order_status (user asks about their past purchase)
+- complaint (user expresses dissatisfaction)
+- general_help (user says hi, hello, hey, or asks questions like opening hours)
+- unknown (user message is completely unrelated to a bookstore — e.g., asking about cooking recipes, politics, or random jokes)
 
 Message Type: {msgType}
 
@@ -70,7 +79,6 @@ export async function classifyIntent({
 }: AgentRouteInput["message"] & {
   msgType?: string;
 }): Promise<UnifiedIntentResult> {
-  
   const promptMessage = await prompt.format({
     userInput: userInput || "(none)",
     extractedText: extractedText || "(none)",

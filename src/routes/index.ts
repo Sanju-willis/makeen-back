@@ -1,14 +1,12 @@
 // src\routes\index.ts
 import { FastifyInstance } from "fastify";
 import chatRoute from "./chatRoute";
+import { whatsappRoute } from "./whatsappRoute";
+import { messengerRoute } from "./messengerRoute"; // ✅ added
 
 export default async function routes(fastify: FastifyInstance) {
-  fastify.get("/", async () => {
-    return { message: "🤖 AI Bot API Running" };
-  });
-
-
-
-  //console.log("📦 Registering chatRoute at /api/chat");
-  fastify.register(chatRoute);
+  // 🔁 Register chat and WhatsApp routes
+  fastify.register(chatRoute, { prefix: "/api" });
+  fastify.register(whatsappRoute, { prefix: "/whatsapp" });
+  fastify.register(messengerRoute, { prefix: "/messenger" }); // ✅ added
 }

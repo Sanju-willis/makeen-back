@@ -3,6 +3,7 @@ export type UnifiedIntentResult = {
   intent: {
     type:
       | "book_inquiry"
+      | "book_recommendation"
       | "order_status"
       | "complaint"
       | "general_help"
@@ -20,14 +21,19 @@ export type UnifiedIntentResult = {
 
       // Receipt fields
       orderId?: string;
-      name?: string;
-      email?: string;
-      date?: string; // format: YYYY-MM-DD
-      total?: string; // format: "Rs. 5000"
-      items?: string[]; // optional list of purchased items
+      customerName?: string;
+      customerEmail?: string;
+      purchaseDate?: string; // format: YYYY-MM-DD
+      orderTotal?: string; // format: "Rs. 5000"
+      purchasedItems?: string[]; // optional list of purchased items
 
       // Complaint field
       complaintText?: string;
+      complaintDate?: string;
+
+      recommendationTopic?: string; // e.g. "productivity", "history"
+      preferredAuthors?: string[];
+      preferredGenres?: string[];
     };
   };
 };
