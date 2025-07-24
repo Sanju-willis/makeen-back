@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Env files
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# IDE / system files
+.vscode/
+.DS_Store
+
+# TS cache
+*.tsbuildinfo
+
+# Optional: pnpm store
+.pnpm-store/
