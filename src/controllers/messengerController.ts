@@ -1,7 +1,7 @@
 // src\controllers\messengerController.ts
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { routeToAgent } from "@/services/agentRouterService";
-import { parseMessengerWebhook } from "@/parsers/messengerParser";
+import { parseMessengerWebhook } from "@/utils/parsers/messengerParser";
 //import { extractMessengerAnalytics } from "@/utils/analytics/extractMessengerAnalytics";
 import { extractWhatsAppImageText } from "@/utils/transcription/extractWhatsAppImageText"; // Optional if doing direct buffer upload
 import { MESSENGER_VERIFY_TOKEN } from "@/config/env"; // Ensure this is defined in your environment config

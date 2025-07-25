@@ -1,5 +1,5 @@
 // src\controllers\chatController.ts
-import { parseWebchatRequest } from "../parsers/parseWebchatRequest";
+import { parseWebchatRequest } from "@/utils/parsers/parseWebchatRequest";
 //import { parseWebchatAnalytics } from "../parsers/parseWebchatAnalytics";
 import { extractImageText } from "../utils/transcription/extractImageText";
 import { routeToAgent } from "../services/agentRouterService";

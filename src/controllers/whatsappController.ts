@@ -1,7 +1,7 @@
 // src\controllers\whatsappController.ts
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { routeToAgent } from "../services/agentRouterService";
-import { parseWhatsappMessages } from "../parsers/parseWhatsappMessages";
+import { parseWhatsappMessages } from "@/utils/parsers/parseWhatsappMessages";
 import { WHATSAPP_VERIFY_TOKEN } from "../config/env";
 import { extractWhatsAppImageText } from "@/utils/transcription/extractWhatsAppImageText";
 

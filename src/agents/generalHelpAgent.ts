@@ -1,18 +1,16 @@
 // src\agents\generalHelpAgent.ts
 import { ChatOpenAI } from "@langchain/openai";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
-import { queryRAGTool } from "./tools/queryRAGTool";
 import { handoverTool } from "./tools/handoverTool";
 import { getSessionMemory } from "@/memory/sessionMemory";
 import { knowledgeBaseTool } from "./tools/knowledgeBaseTool";
-
 
 const model = new ChatOpenAI({ modelName: "gpt-4o", temperature: 0 });
 
 export const getGeneralHelpAgent = async (sessionId: string) => {
   const memory = getSessionMemory(sessionId);
 
- // console.log("general help agent memory:", memory, sessionId);
+  // console.log("general help agent memory:", memory, sessionId);
 
   const systemPrompt = `
 You are a helpful and polite customer service assistant for a bookstore.
@@ -32,12 +30,13 @@ You are a helpful and polite customer service assistant for a bookstore.
 - If the user’s message clearly matches another type of help (e.g., book price, order status, complaints),
   and you’re not the best agent to handle it,
   → Use the \`handover_to_specialized_agent\` tool to send the message to the right agent.
+You also have access to a knowledge base that includes information about store hours, return policies, delivery, and payment methods. Use it when users ask general help questions.
 
 Only use tools when necessary. If you're unsure, ask a clarifying question rather than making assumptions.
 `;
 
   return await initializeAgentExecutorWithOptions(
-    [queryRAGTool, handoverTool,knowledgeBaseTool],
+    [handoverTool, knowledgeBaseTool],
     model,
     {
       agentType: "openai-functions",

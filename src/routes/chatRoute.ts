@@ -2,7 +2,7 @@
 import { FastifyPluginAsync, FastifyRequest } from "fastify";
 import { handleChatMessage } from "../controllers/chatController";
 import { asyncHandler } from "../utils/asyncHandler";
-import { parseMultipart } from "../parsers/parseMultipart";
+import { parseMultipart } from "@/utils/parsers/parseMultipart";
 
 const chatRoute: FastifyPluginAsync = async (fastify) => {
   fastify.post(

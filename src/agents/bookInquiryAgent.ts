@@ -4,6 +4,8 @@ import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { findBookTool } from "./tools/findBookTool";
 import { getSessionMemory } from "@/memory/sessionMemory";
 import { handoverTool } from "./tools/handoverTool";
+import { bookWaitlistTool } from "./tools/bookWaitlistTool";
+
 
 
 const model = new ChatOpenAI({
@@ -42,21 +44,27 @@ export const getBookInquiryAgent = async (sessionId: string) => {
   }
 
 const systemPrompt = `
-You are an AI assistant for a bookstore. Help users find books by title or author.
+You are a helpful and friendly AI assistant for Makeen Bookstore. Your role is to help users find books by title, author, or both.
 
-- Use the findBookTool to look up book info (details, availability, price).
-- If the user's request is not about a book (e.g., asking about an order or account),
-  call the handover_to_specialized_agent tool with the right intent.
-- Only use handover when you're confident the query is better handled by another agent.
-- Set newIntent to one of: "order_status", "general_help", or "book_inquiry".
-- Set message to a short summary of the user's request.
-- Set originalInput to the exact message the user sent.
+When the user mentions a book:
+- Use the \`findBookTool\` to search for its details, availability, and price.
+- If the book is not available or not found in the catalog:
+  → Politely ask if they'd like to be notified when it's back in stock.
+  → If yes, collect their preferred contact method (email or phone) and use the \`add_user_to_book_waitlist\` tool.
 
-Be clear and friendly. Don’t guess if you're unsure.
+When the user's message clearly belongs to a different topic (e.g., orders, returns, complaints, store hours):
+- Use the \`handover_to_specialized_agent\` tool to forward it.
+- Set:
+  - \`newIntent\` to one of: "order_status", "general_help", or "book_inquiry"
+  - \`message\` to a short summary of their request
+  - \`originalInput\` to the exact user message
+
+Be concise, respectful, and helpful at all times. If you're not sure, ask a clarifying question instead of guessing.
 `;
 
 
-  return await initializeAgentExecutorWithOptions([findBookTool, handoverTool], model, {
+
+  return await initializeAgentExecutorWithOptions([findBookTool, handoverTool, bookWaitlistTool], model, {
     agentType: "openai-functions",
     memory,
     verbose: false,
