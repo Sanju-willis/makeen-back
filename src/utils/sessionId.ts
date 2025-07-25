@@ -63,9 +63,7 @@ export function getOrCreateSessionId({
 /**
  * Updates the last known intent for a session.
  */
-/**
- * Updates the last known intent for a session.
- */
+
 export type UpdateSessionIntentParams = {
   sessionId: string;
   intent: string;
@@ -80,4 +78,13 @@ export function updateSessionIntent({
       break;
     }
   }
+}
+
+export function getLastSessionIntent(sessionId: string): string | undefined {
+  for (const session of sessionMap.values()) {
+    if (session.id === sessionId) {
+      return session.lastIntent;
+    }
+  }
+  return undefined;
 }

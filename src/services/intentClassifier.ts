@@ -26,6 +26,8 @@ Respond ONLY in raw JSON. Use this format:
   }},
   "content": {{
     "type": "book" | "receipt" | "text_only" | "unknown",
+    "receiptType": "bookstore" | "non_bookstore" | "unknown",
+
     "data": {{
       // If content.type === "book":
     "title": "book title (e.g., Atomic Habits)",
@@ -102,7 +104,7 @@ export async function classifyIntent({
       raw = raw.replace(/^```/, "").replace(/```$/, "").trim();
     }
 
-    console.log("🧪 Cleaned JSON string:", raw);
+    //console.log("🧪 Cleaned JSON string:", raw);
 
     const parsed = JSON.parse(raw);
     return parsed as UnifiedIntentResult;

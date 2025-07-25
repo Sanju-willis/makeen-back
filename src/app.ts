@@ -1,21 +1,19 @@
 // src\app.ts
 import Fastify from "fastify";
-import multipart from "@fastify/multipart";
 import routes from "./routes";
+import { registerPlugins } from "./plugins";
 
-const app = Fastify({ logger: true });
-
-// 🔌 Middleware: Must register multipart before routes
-app.register(multipart, {
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+export const buildApp = async () => {
+const app = Fastify({
+  logger: {
+    level: "warn", // or "error" to only log serious issues
   },
 });
 
-// ✅ App health check
-app.get("/", async () => ({ message: "🌍 Root OK" }));
+  await registerPlugins(app);
 
-// 🔁 Main route registration (includes /whatsapp/*)
-app.register(routes); // no prefix, since each route has its own
+  app.get("/", async () => ({ message: "🌍 Root OK" }));
+  app.register(routes);
 
-export default app;
+  return app;
+};

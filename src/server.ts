@@ -1,19 +1,17 @@
 // src\server.ts
-import app from "./app";
-import { registerPlugins } from "./plugins";
-import { PORT, HOST } from "@/config/env"; // ✅ import validated env
+import { PORT, HOST } from "./config/env"; // use relative path if ESM disabled
+import { buildApp } from "./app";
 
 const start = async () => {
   try {
-    await registerPlugins(app);
+    const app = await buildApp();
 
     await app.listen({ port: PORT, host: HOST });
-
-    app.printRoutes(); // 👈 MUST come after listen()
+    app.printRoutes();
 
     console.log(`🚀 Server running at http://${HOST}:${PORT}`);
   } catch (err) {
-    app.log.error(err);
+    console.error("❌ Startup error:", err);
     process.exit(1);
   }
 };

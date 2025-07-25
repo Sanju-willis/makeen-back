@@ -3,7 +3,6 @@ import { ChatOpenAI } from "@langchain/openai";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { findBookTool } from "../tools/findBookTool";
 import { getSessionMemory } from "@/memory/sessionMemory";
-import fa from "zod/v4/locales/fa.js";
 
 const model = new ChatOpenAI({
   modelName: "gpt-4o",

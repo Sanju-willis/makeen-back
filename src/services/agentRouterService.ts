@@ -2,36 +2,56 @@
 import { classifyIntent } from "./intentClassifier";
 import { getExecutorForIntent } from "../agents/executorRouter";
 import { AgentRouteInput } from "../types/service-types";
-import { getOrCreateSessionId, updateSessionIntent } from "../utils/sessionId"; // ⬅️ include update
+import {
+  getOrCreateSessionId,
+  updateSessionIntent,
+  getLastSessionIntent,
+} from "../utils/sessionId";
 import { updateMemoryContext } from "@/memory/updateMemoryContext";
-import { sendWhatsAppReply } from "@/utils/helpersReply/sendWhatsAppReply"; // ⬅️ import here
-import { sendMessengerReply } from "@/utils/helpersReply/sendMessengerReply"; // ⬅️ import here
+import { sendWhatsAppReply } from "@/utils/helpersReply/sendWhatsAppReply";
+import { sendMessengerReply } from "@/utils/helpersReply/sendMessengerReply";
 
 export const routeToAgent = async ({ user, message }: AgentRouteInput) => {
+  //  console.log("🔄 service:", {user, message, });
+
   const { sessionId, isNew } = getOrCreateSessionId({
     userId: user.id,
     platform: user.platform,
   });
+console.log("Session ID:", sessionId, "Is new session:", isNew);
+  let intentResult;
+  if (isNew) {
+    // 🧠 Only classify if session is new
+    intentResult = await classifyIntent({
+      userInput: message.userInput,
+      extractedText: message.extractedText,
+      msgType: message.msgType,
+    });
 
-  const intentResult = await classifyIntent({
-    userInput: message.userInput,
-    extractedText: message.extractedText,
-    msgType: message.msgType,
-  });
+    updateSessionIntent({
+      sessionId,
+      intent: intentResult.intent.type,
+    });
 
-  const { intent } = intentResult;
-  console.log("🔍 Classified intent:", intentResult);
-  // 🧠 Update session with last intent
-  updateSessionIntent({
-    sessionId,
-    intent: intent.type,
-  });
+    updateMemoryContext(sessionId, intentResult, user);
+  }
+  const lastIntent = getLastSessionIntent(sessionId);
+  console.log("Last intent for session:", lastIntent);
+  if (!lastIntent) throw new Error("Missing last intent for session.");
 
-  updateMemoryContext(sessionId, intentResult, user);
+  const userInput =
+    message.userInput?.trim() ||
+    (["image", "video", "document"].includes(message.msgType || "")
+      ? `📎 A ${message.msgType} was sent without any text. Ask the user what they'd like to know about it.`
+      : "The user sent a message, but no readable text was found.");
 
-  const executor = await getExecutorForIntent(intent.type, sessionId);
+  const intentType = intentResult?.intent.type || lastIntent;
 
-  const result = await executor.invoke({ input: message.userInput });
+  const executor = await getExecutorForIntent(intentType, sessionId);
+
+  const result = await executor.invoke({ input: userInput });
+
+  console.log(" Agent invoke:", userInput);
 
   const reply = result.output ?? result;
 
@@ -46,8 +66,6 @@ export const routeToAgent = async ({ user, message }: AgentRouteInput) => {
     default:
       console.warn(`⚠️ Unknown platform: ${user.platform}`);
   }
-
-  console.log(" Agent invoke:", message.userInput);
 
   return { output: reply };
 };

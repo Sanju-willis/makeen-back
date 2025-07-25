@@ -29,11 +29,12 @@ export const receiveMessage = async (
 ) => {
   const body = req.body as any;
   const parsed = parseWhatsappMessages(body);
-  console.log("📦 Parsed WhatsApp Messages:", JSON.stringify(parsed, null, 2));
+ // console.log("📦 Parsed WhatsApp Messages:", JSON.stringify(parsed, null, 2));
 
-  if (parsed.length === 0) {
-    return reply.code(200).send();
-  }
+  // ✅ Always respond fast
+  reply.code(200).send();
+
+  if (parsed.length === 0) return;
 
   for (const msg of parsed) {
     const { user, message } = msg;
@@ -57,24 +58,18 @@ export const receiveMessage = async (
           if (mediaId) {
             console.log("📷 Calling extractImageText with:", mediaId);
             extractedText = await extractWhatsAppImageText(mediaId);
-          } else {
-            console.warn("⚠️ Image received without mediaId");
           }
           break;
 
-        case "audio":
-        case "video":
-          console.log(`🔇 ${msgType} extraction not yet implemented`);
-          break;
-
         default:
-          console.log("⚠️ No extractor matched for:", { msgType, mediaId });
+          
       }
     } catch (err) {
       console.warn(`⚠️ Failed to extract ${msgType} content:`, err);
     }
 
-    await routeToAgent({
+    // 🧠 Background process — don't block response
+    routeToAgent({
       user: { id, name, platform },
       message: {
         msgType,
@@ -83,8 +78,6 @@ export const receiveMessage = async (
         mediaId,
         timestamp,
       },
-    });
+    }).catch(console.error);
   }
-
-  return reply.code(200).send();
 };

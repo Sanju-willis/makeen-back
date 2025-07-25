@@ -24,7 +24,7 @@ export const extractWhatsAppImageText = async (
     if (!text || text.trim() === "") {
       console.warn("⚠️ No text extracted from WhatsApp image.");
     } else {
-      console.log("✅ Text extracted from WhatsApp image:", text);
+     // console.log("✅ Text extracted from WhatsApp image:", text);
     }
 
     return text;

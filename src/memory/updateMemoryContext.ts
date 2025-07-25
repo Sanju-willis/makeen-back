@@ -51,6 +51,7 @@ export function updateMemoryContext(
 
   const context: Record<string, any> = {
     intent: intent.type,
+    confidence: intent.confidence,
     platform: user.platform,
   };
 
