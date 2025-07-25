@@ -19,7 +19,9 @@ Also provide the user's original message in 'originalInput' to help the new agen
   schema = z.object({
     newIntent: z.enum(["book_inquiry", "order_status", "general_help"]),
     message: z.string().describe("A short summary to guide the new agent"),
-    originalInput: z.string().describe("The original user message that triggered the handover"),
+    originalInput: z
+      .string()
+      .describe("The original user message that triggered the handover"),
   });
 
   returnDirect = true;

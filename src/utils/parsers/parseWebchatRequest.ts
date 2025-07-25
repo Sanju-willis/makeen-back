@@ -1,6 +1,6 @@
-// src\parsers\parseWebchatRequest.ts
+// src\utils\parsers\parseWebchatRequest.ts
 import type { MultipartFile } from "@fastify/multipart";
-import type { ParsedWebchatMessage, HandleChatMessageInput } from "../types/controller-types";
+import type { ParsedWebchatMessage, HandleChatMessageInput } from "@/types/controller-types";
 
 let idCounter = 0;
 

@@ -1,4 +1,4 @@
-// src\parsers\parseMultipart.ts
+// src\utils\parsers\parseMultipart.ts
 import type { FastifyRequest } from "fastify";
 import type { MultipartFile } from "@fastify/multipart";
 

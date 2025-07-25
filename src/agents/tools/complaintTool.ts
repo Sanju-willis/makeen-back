@@ -4,7 +4,8 @@ import { z } from "zod";
 
 export const complaintTool = new DynamicStructuredTool({
   name: "complaintTool",
-  description: "Handles customer complaints empathetically and escalates serious issues",
+  description:
+    "Handles customer complaints empathetically and escalates serious issues",
   schema: z.object({
     complaint: z.string(),
   }),

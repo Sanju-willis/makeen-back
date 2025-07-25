@@ -1,4 +1,4 @@
-// src\parsers\parseWhatsappMessages.ts
+// src\utils\parsers\parseWhatsappMessages.ts
 import type { ParsedWebchatMessage } from "@/types/controller-types";
 
 type WhatsAppType =

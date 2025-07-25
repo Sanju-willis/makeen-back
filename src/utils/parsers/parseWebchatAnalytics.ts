@@ -1,4 +1,4 @@
-// src\parsers\parseWebchatAnalytics.ts
+// src\utils\parsers\parseWebchatAnalytics.ts
 import type { FastifyRequest } from "fastify";
 import { saveWebchatAnalytics } from "@/services/analytics/analyticsService";
 

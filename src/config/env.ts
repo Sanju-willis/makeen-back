@@ -8,7 +8,6 @@ const getEnv = (key: string): string => {
   return value;
 };
 
-// ✅ Required
 export const OPENAI_API_KEY = getEnv("OPENAI_API_KEY");
 export const GOOGLE_CLIENT_EMAIL = getEnv("GOOGLE_CLIENT_EMAIL");
 export const GOOGLE_PRIVATE_KEY = getEnv("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n");
