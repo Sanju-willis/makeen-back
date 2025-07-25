@@ -3,6 +3,8 @@ import { ChatOpenAI } from "@langchain/openai";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { findBookTool } from "./tools/findBookTool";
 import { getSessionMemory } from "@/memory/sessionMemory";
+import { handoverTool } from "./tools/handoverTool";
+
 
 const model = new ChatOpenAI({
   modelName: "gpt-4o",
@@ -13,7 +15,7 @@ export const getBookInquiryAgent = async (sessionId: string) => {
   const memory = getSessionMemory(sessionId);
   const context = (memory as any).__context || {};
 
-  console.log("Book inquiry agent memory:", memory);
+  console.log("🤖 Book inquiry agent memory:", );
 
   const currentBook = {
     title: context.title,
@@ -39,13 +41,22 @@ export const getBookInquiryAgent = async (sessionId: string) => {
     };
   }
 
-  const systemPrompt = `
+const systemPrompt = `
 You are an AI assistant for a bookstore. Help users find books by title or author.
-Use the findBookTool to look up book info if needed.
+
+- Use the findBookTool to look up book info (details, availability, price).
+- If the user's request is not about a book (e.g., asking about an order or account),
+  call the handover_to_specialized_agent tool with the right intent.
+- Only use handover when you're confident the query is better handled by another agent.
+- Set newIntent to one of: "order_status", "general_help", or "book_inquiry".
+- Set message to a short summary of the user's request.
+- Set originalInput to the exact message the user sent.
+
 Be clear and friendly. Don’t guess if you're unsure.
 `;
 
-  return await initializeAgentExecutorWithOptions([findBookTool], model, {
+
+  return await initializeAgentExecutorWithOptions([findBookTool, handoverTool], model, {
     agentType: "openai-functions",
     memory,
     verbose: false,

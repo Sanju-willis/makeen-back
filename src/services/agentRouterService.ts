@@ -12,7 +12,6 @@ import { sendWhatsAppReply } from "@/utils/helpersReply/sendWhatsAppReply";
 import { sendMessengerReply } from "@/utils/helpersReply/sendMessengerReply";
 import { runAgentWithHandover } from "./runAgentWithHandover";
 
-
 export const routeToAgent = async ({ user, message }: AgentRouteInput) => {
   //  console.log("🔄 service:", {user, message, });
 
@@ -20,7 +19,7 @@ export const routeToAgent = async ({ user, message }: AgentRouteInput) => {
     userId: user.id,
     platform: user.platform,
   });
-console.log("Session ID:", sessionId, "Is new session:", isNew);
+  console.log("Session ID:", sessionId, "Is new session:", isNew);
   let intentResult;
   if (isNew) {
     // 🧠 Only classify if session is new
@@ -50,12 +49,15 @@ console.log("Session ID:", sessionId, "Is new session:", isNew);
   const intentType = intentResult?.intent.type || lastIntent;
 
   const executor = await getExecutorForIntent(intentType, sessionId);
-
-  const result = await executor.invoke({ input: userInput });
+  
+  const result = await runAgentWithHandover(executor, sessionId, userInput);
 
   console.log(" Agent invoke:", userInput);
 
-  const reply = result.output ?? result;
+const reply =
+  typeof result === "string"
+    ? result
+    : result.output ?? result;
 
   // 🔁 Respond to user on correct platform
   switch (user.platform) {

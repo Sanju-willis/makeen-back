@@ -1,6 +1,7 @@
-// src\tools\findBookTool.ts
+// src\agents\tools\findBookTool.ts
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
+import { findBookInInventory } from "./services/bookInventoryService";
 
 export const findBookTool = new DynamicStructuredTool({
   name: "findBookTool",
@@ -15,14 +16,31 @@ export const findBookTool = new DynamicStructuredTool({
       .default("details"),
   }),
   func: async ({ title, author, query }) => {
+    console.log("📚 findBookTool called with:");
+    console.log("→ Title:", title);
+    console.log("→ Author:", author);
+    console.log("→ Query type:", query);
+
+    const book = await findBookInInventory(title, author);
+
+    if (!book) {
+      return `❌ Sorry, I couldn't find "${title}"${author ? ` by ${author}` : ""} in our inventory.`;
+    }
+
     switch (query) {
       case "availability":
-        return `Checking availability for "${title}" by ${author || "unknown author"}.`;
+        return book.stock > 0
+          ? `✅ "${book.title}" by ${book.author} is available.`
+          : `❌ "${book.title}" by ${book.author} is currently out of stock.`;
+
       case "price":
-        return `Fetching price for "${title}" by ${author || "unknown author"}.`;
+        return `💲 The price of "${book.title}" by ${book.author} is $${book.price.toFixed(2)}.`;
+
       case "details":
       default:
-        return `Looking for details of "${title}" by ${author || "unknown author"}.`;
+        return `📘 "${book.title}" by ${book.author}. Price: $${book.price.toFixed(
+          2
+        )}. ${book.stock > 0 ? "In stock." : "Currently unavailable."}`;
     }
   },
 });

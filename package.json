@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
+    "db:push": "drizzle-kit push --config=src/drizzle.config.ts",
+    "seed:books": "ts-node --require tsconfig-paths/register scripts/seedBooks.ts",
+    "seed:orders": "ts-node --require tsconfig-paths/register scripts/seedOrders.ts",
     "build": "tsc"
   },
   "keywords": [],
@@ -15,6 +18,7 @@
   "dependencies": {
     "@fastify/multipart": "^9.0.3",
     "@google-cloud/vision": "^5.3.2",
+    "@langchain/community": "^0.3.49",
     "@langchain/core": "^0.3.66",
     "@langchain/openai": "^0.6.2",
     "@supabase/supabase-js": "^2.52.0",
@@ -37,8 +41,10 @@
     "@types/dotenv": "^8.2.3",
     "@types/node": "^24.1.0",
     "drizzle-kit": "^0.31.4",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }

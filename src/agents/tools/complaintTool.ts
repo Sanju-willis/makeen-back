@@ -1,4 +1,4 @@
-// src\tools\complaintTool.ts
+// src\agents\tools\complaintTool.ts
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
 

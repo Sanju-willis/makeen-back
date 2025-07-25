@@ -1,16 +1,18 @@
 // src\agents\generalHelpAgent.ts
 import { ChatOpenAI } from "@langchain/openai";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
-import { generalHelpTool } from "./tools/generalHelpTool";
+import { queryRAGTool } from "./tools/queryRAGTool";
 import { handoverTool } from "./tools/handoverTool";
 import { getSessionMemory } from "@/memory/sessionMemory";
+import { knowledgeBaseTool } from "./tools/knowledgeBaseTool";
+
 
 const model = new ChatOpenAI({ modelName: "gpt-4o", temperature: 0 });
 
 export const getGeneralHelpAgent = async (sessionId: string) => {
   const memory = getSessionMemory(sessionId);
 
-  console.log("general help agent memory:", memory, sessionId);
+ // console.log("general help agent memory:", memory, sessionId);
 
   const systemPrompt = `
 You are a helpful and polite customer service assistant for a bookstore.
@@ -35,7 +37,7 @@ Only use tools when necessary. If you're unsure, ask a clarifying question rathe
 `;
 
   return await initializeAgentExecutorWithOptions(
-    [generalHelpTool, handoverTool],
+    [queryRAGTool, handoverTool,knowledgeBaseTool],
     model,
     {
       agentType: "openai-functions",
