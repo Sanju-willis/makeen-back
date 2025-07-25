@@ -67,10 +67,12 @@ export function getOrCreateSessionId({
 export type UpdateSessionIntentParams = {
   sessionId: string;
   intent: string;
+  confidence?: number;
 };
 export function updateSessionIntent({
   sessionId,
   intent,
+  confidence,
 }: UpdateSessionIntentParams): void {
   for (const [key, session] of sessionMap.entries()) {
     if (session.id === sessionId) {

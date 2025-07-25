@@ -1,7 +1,7 @@
 // src\agents\complaintAgent.ts
 import { ChatOpenAI } from "@langchain/openai";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
-import { complaintTool } from "../tools/complaintTool";
+import { complaintTool } from "./tools/complaintTool";
 import { getSessionMemory } from "@/memory/sessionMemory";
 import { SystemMessage } from "@langchain/core/messages";
 

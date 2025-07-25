@@ -1,7 +1,7 @@
 // src\agents\orderStatusAgent.ts
 import { ChatOpenAI } from "@langchain/openai";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
-import { orderStatusTool } from "../tools/orderStatusTool";
+import { orderStatusTool } from "./tools/orderStatusTool";
 import { getSessionMemory } from "@/memory/sessionMemory";
 import { SystemMessage } from "@langchain/core/messages";
 

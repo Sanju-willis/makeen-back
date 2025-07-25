@@ -1,7 +1,8 @@
 // src\agents\generalHelpAgent.ts
 import { ChatOpenAI } from "@langchain/openai";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
-import { generalHelpTool } from "../tools/generalHelpTool";
+import { generalHelpTool } from "./tools/generalHelpTool";
+import { handoverTool } from "./tools/handoverTool";
 import { getSessionMemory } from "@/memory/sessionMemory";
 
 const model = new ChatOpenAI({ modelName: "gpt-4o", temperature: 0 });
@@ -26,15 +27,23 @@ You are a helpful and polite customer service assistant for a bookstore.
     - "Would you like help with this book or is it related to a past order?"
     - "Is this file showing a purchase receipt or a book you're interested in?"
 
+- If the user’s message clearly matches another type of help (e.g., book price, order status, complaints),
+  and you’re not the best agent to handle it,
+  → Use the \`handover_to_specialized_agent\` tool to send the message to the right agent.
+
 Only use tools when necessary. If you're unsure, ask a clarifying question rather than making assumptions.
 `;
 
-  return await initializeAgentExecutorWithOptions([generalHelpTool], model, {
-    agentType: "openai-functions",
-    memory,
-    verbose: false,
-    agentArgs: {
-      prefix: systemPrompt, // this is the actual config it respects
-    },
-  });
+  return await initializeAgentExecutorWithOptions(
+    [generalHelpTool, handoverTool],
+    model,
+    {
+      agentType: "openai-functions",
+      memory,
+      verbose: false,
+      agentArgs: {
+        prefix: systemPrompt,
+      },
+    }
+  );
 };

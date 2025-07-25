@@ -1,7 +1,7 @@
 // src\agents\bookInquiryAgent.ts
 import { ChatOpenAI } from "@langchain/openai";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
-import { findBookTool } from "../tools/findBookTool";
+import { findBookTool } from "./tools/findBookTool";
 import { getSessionMemory } from "@/memory/sessionMemory";
 
 const model = new ChatOpenAI({
@@ -16,9 +16,9 @@ export const getBookInquiryAgent = async (sessionId: string) => {
   console.log("Book inquiry agent memory:", memory);
 
   const currentBook = {
-  title: context.title,
-  author: context.author,
-};
+    title: context.title,
+    author: context.author,
+  };
 
   const prevBook = (memory as any).__bookContext;
 

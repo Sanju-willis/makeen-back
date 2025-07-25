@@ -10,6 +10,8 @@ import {
 import { updateMemoryContext } from "@/memory/updateMemoryContext";
 import { sendWhatsAppReply } from "@/utils/helpersReply/sendWhatsAppReply";
 import { sendMessengerReply } from "@/utils/helpersReply/sendMessengerReply";
+import { runAgentWithHandover } from "./runAgentWithHandover";
+
 
 export const routeToAgent = async ({ user, message }: AgentRouteInput) => {
   //  console.log("🔄 service:", {user, message, });
