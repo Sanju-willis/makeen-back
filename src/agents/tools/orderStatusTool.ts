@@ -1,10 +1,10 @@
-// src\agents\tools\orderStatusTool.ts
+// src/agents/tools/orderStatusTool.ts
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
+import { eq } from "drizzle-orm";
+import { db } from "@/db"; // adjust this import to your actual db path
+import { orders } from "@/db/schema/orders";
 
-/**
- * Accepts context from memory (e.g., orderId injected via updateMemoryContext)
- */
 export const orderStatusTool = (context: Record<string, any>) =>
   new DynamicStructuredTool({
     name: "orderStatusTool",
@@ -14,8 +14,18 @@ export const orderStatusTool = (context: Record<string, any>) =>
     }),
     func: async ({ orderId }) => {
       const id = orderId || context?.orderId;
-
       if (!id) return "❌ Order ID is missing.";
-      return `📦 Order ${id} is currently being processed.`;
+
+      const result = await db
+        .select()
+        .from(orders)
+        .where(eq(orders.orderId, id))
+        .limit(1);
+
+      const order = result[0];
+
+      if (!order) return `❌ No order found for ID: ${id}`;
+
+      return `📦 Order "${order.orderId}" for "${order.bookTitle}" is currently: ${order.status}`;
     },
   });

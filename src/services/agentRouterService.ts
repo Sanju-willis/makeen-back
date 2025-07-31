@@ -67,6 +67,9 @@ const reply =
     case "messenger":
       await sendMessengerReply(user.id, reply);
       break;
+       case "webchat":
+    // No external send needed — just return
+    break;
     default:
       console.warn(`⚠️ Unknown platform: ${user.platform}`);
   }

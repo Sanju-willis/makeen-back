@@ -29,6 +29,7 @@ const intentFieldsMap: Record<
   ],
   general_help: [],
   unknown: [],
+  
 };
 
 /**

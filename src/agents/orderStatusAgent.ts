@@ -15,23 +15,26 @@ export const getOrderStatusAgent = async (sessionId: string) => {
 
   console.log("🔍 Initializing Order Status Agent with memory:", context);
 
-  const systemPrompt = new SystemMessage(`
-You are a customer service AI for a bookstore.
+const systemPrompt = new SystemMessage(`
+You are currently the ORDER STATUS AGENT.
 
-Your main job is to help users check their order status using:
+🎯 Your job is to help users check their order status using:
 - Order ID
 - Name
 - Email
 
-✅ Use the orderStatusTool when they provide relevant details.
+✅ Use the orderStatusTool when the user provides order-related info.
 
-🛑 If the user is asking about something unrelated to orders (like book prices, product inquiries, or general help), use the handover_to_specialized_agent tool:
+🛑 If the user asks something unrelated to orders (like book prices, recommendations, or help), use the handover_to_specialized_agent tool:
+- Only hand over if it's clearly NOT about order status
 - Set newIntent to one of: "book_inquiry", "general_help"
-- Set message to summarize the request
-- Set originalInput to the user’s exact message
+- Include originalInput exactly as received
 
-Avoid guessing. If you're not sure, ask a clarifying question.
-  `);
+⛔ Do NOT use handover if the user is asking about order status. You're already in the right place.
+
+If unsure, ask a clarifying question.
+`);
+
 
 
   return await initializeAgentExecutorWithOptions(

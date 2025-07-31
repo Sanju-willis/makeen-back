@@ -1,6 +1,7 @@
 // src\services\runAgentWithHandover.ts
 import { updateSessionIntent } from "@/utils/sessionId";
 import { getExecutorForIntent } from "@/agents/executorRouter";
+import { updateMemoryContext } from "@/memory/updateMemoryContext"; // 👈 import this
 
 function isLikelyJson(str: string): boolean {
   const trimmed = str.trim();
@@ -46,11 +47,34 @@ export async function runAgentWithHandover(
 
     try {
       updateSessionIntent({ sessionId, intent: newIntent });
+      updateMemoryContext(
+        sessionId,
+        {
+          intent: {
+            type: newIntent,
+            confidence: 1,
+          },
+          content: {
+            type: "text_only",
+            data: {},
+          },
+        },
+        {
+          id: "system",
+          platform: "internal",
+          name: "System Bot",
+        }
+      );
 
       const newAgent = await getExecutorForIntent(newIntent, sessionId);
-      console.log("📦 New agent retrieved. Calling with input:", originalInput || message);
+      console.log(
+        "📦 New agent retrieved. Calling with input:",
+        originalInput || message
+      );
 
-      const followup = await newAgent.invoke({ input: originalInput || message });
+      const followup = await newAgent.invoke({
+        input: originalInput || message,
+      });
 
       return typeof followup === "string"
         ? { output: followup }
