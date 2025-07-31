@@ -5,7 +5,7 @@ services:
     build: .
     container_name: fastify-ai-bot
     ports:
-      - "5000:5000"
+      - "5050:5000"
     volumes:
       - /app/node_modules
     environment:

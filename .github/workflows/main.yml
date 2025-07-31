@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Deploy Docker App to Ubuntu
 
 on:
   push:
@@ -10,41 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build project
-        run: pnpm build
-
-      - name: Deploy over SSH
+      - name: Copy files to server via SCP
         uses: appleboy/scp-action@v0.1.5
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: "dist,package.json,ecosystem.config.js"
-          target: "~/makeen-back"
+          source: "."
+          target: "/home/sanju/projects/makeen-back"
 
-      - name: Restart server (PM2)
+      - name: SSH and run Docker Compose
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/makeen-back
-            pnpm install --prod
-            pm2 restart ecosystem.config.js || pm2 start ecosystem.config.js
+            cd /home/sanju/projects/makeen-back
+            docker compose down
+            docker compose up --build -d
