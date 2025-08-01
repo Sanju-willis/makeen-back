@@ -1,7 +1,7 @@
 // src\services\analytics\analyticsService.ts
 import { db } from "@/db"; // ← your drizzle instance
 import { webchatAnalytics } from "@/db/schema/analytics";
-import { WebchatAnalytics } from "@/parsers/parseWebchatAnalytics";
+import { WebchatAnalytics } from "@/utils/parsers/parseWebchatAnalytics";
 
 export const saveWebchatAnalytics = async (data: WebchatAnalytics) => {
   try {

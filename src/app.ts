@@ -6,7 +6,7 @@ import { registerPlugins } from "./plugins";
 export const buildApp = async () => {
 const app = Fastify({
   logger: {
-    level: "warn", // or "error" to only log serious issues
+    level: "info", // or "error" to only log serious issues
   },
 });
 

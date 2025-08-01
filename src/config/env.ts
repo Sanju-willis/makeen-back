@@ -23,7 +23,7 @@ export const WHATSAPP_VERIFY_TOKEN = getEnv("WHATSAPP_VERIFY_TOKEN");
 
 export const MESSENGER_VERIFY_TOKEN = getEnv("MESSENGER_VERIFY_TOKEN");
 // ✅ Optional with defaults
-export const PORT = parseInt(process.env.PORT || "3000", 10);
+export const PORT = parseInt(process.env.PORT || "4000", 10);
 export const HOST = process.env.HOST || "0.0.0.0";
 
 export const FB_PAGE_ACCESS_TOKEN = getEnv("FB_PAGE_ACCESS_TOKEN");

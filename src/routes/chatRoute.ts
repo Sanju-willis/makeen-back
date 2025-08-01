@@ -5,27 +5,35 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { parseMultipart } from "@/utils/parsers/parseMultipart";
 
 const chatRoute: FastifyPluginAsync = async (fastify) => {
+  console.log("✅ chatRoute.ts loaded");
   fastify.post(
     "/chat",
     asyncHandler(async (req: FastifyRequest, reply) => {
-      const { message, userId, platform, file } = await parseMultipart(req);
+      try {
+        console.log("📥 Incoming /api/chat request");
 
-      if (!userId || !platform || (!message && !file)) {
-        return reply
-          .code(400)
-          .send({ error: "Missing 'userId', 'platform', 'message', or file" });
+        const { message, userId, platform, file } = await parseMultipart(req);
+        console.log("✅ Parsed fields:", { message, userId, platform, hasFile: !!file });
+
+        if (!userId || !platform || (!message && !file)) {
+          return reply
+            .code(400)
+            .send({ error: "Missing 'userId', 'platform', 'message', or file" });
+        }
+
+        const response = await handleChatMessage({
+          req,
+          message,
+          userId,
+          platform,
+          file,
+        });
+
+        return reply.send({ replies: [response] });
+      } catch (err) {
+        console.error("❌ Chat route error:", err);
+        return reply.code(500).send({ error: "Internal server error" });
       }
-
-      const response = await handleChatMessage({
-        req,
-        message,
-        userId,
-        platform,
-        file,
-      });
-
-      // ✅ Don't wrap an object that's already { reply: string }
-      reply.send({ replies: [response] });
     })
   );
 };
