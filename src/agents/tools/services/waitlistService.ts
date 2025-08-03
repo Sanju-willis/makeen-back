@@ -1,5 +1,5 @@
 // src\agents\tools\services\waitlistService.ts
-import { queryClient } from "@/config/dbClient";
+import { queryClient } from "@/lib/clients/dbClient";
 
 type WaitlistInput = {
   title: string;

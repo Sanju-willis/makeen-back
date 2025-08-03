@@ -1,6 +1,6 @@
-// src\config\visionClient.ts
+// src\lib\clients\visionClient.ts
 import vision from "@google-cloud/vision";
-import { GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY } from "./env";
+import { GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY } from "../../config/env";
 
 export const visionClient = new vision.ImageAnnotatorClient({
   credentials: {

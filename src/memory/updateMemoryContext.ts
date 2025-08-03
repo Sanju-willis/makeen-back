@@ -8,6 +8,7 @@ const intentFieldsMap: Record<
   (keyof UnifiedIntentResult["content"]["data"])[]
 > = {
   book_inquiry: ["title", "author", "publisher", "isbn"],
+  
   order_status: [
     "orderId",
     "customerName",

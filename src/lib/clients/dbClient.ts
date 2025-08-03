@@ -1,4 +1,4 @@
-// src\config\dbClient.ts
+// src\lib\clients\dbClient.ts
 import postgres from "postgres";
 import {
   DATABASE_URL,

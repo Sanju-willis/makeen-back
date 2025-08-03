@@ -10,9 +10,12 @@ const getEnv = (key: string): string => {
 
 export const OPENAI_API_KEY = getEnv("OPENAI_API_KEY");
 export const GOOGLE_CLIENT_EMAIL = getEnv("GOOGLE_CLIENT_EMAIL");
-export const GOOGLE_PRIVATE_KEY = getEnv("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n");
+export const GOOGLE_PRIVATE_KEY = getEnv("GOOGLE_PRIVATE_KEY").replace(
+  /\\n/g,
+  "\n"
+);
 
-export const SUPABASE_URL = getEnv("SUPABASE_URL");               // ✅ new
+export const SUPABASE_URL = getEnv("SUPABASE_URL"); // ✅ new
 export const SUPABASE_ANON_KEY = getEnv("SUPABASE_ANON_KEY");
 export const DATABASE_URL = getEnv("DATABASE_URL");
 export const SUPABASE_SERVICE_ROLE_KEY = getEnv("SUPABASE_SERVICE_ROLE_KEY");
@@ -28,3 +31,9 @@ export const HOST = process.env.HOST || "0.0.0.0";
 
 export const FB_PAGE_ACCESS_TOKEN = getEnv("FB_PAGE_ACCESS_TOKEN");
 export const FB_GRAPH_API = "https://graph.facebook.com/v23.0";
+
+// ✅ New AI/Voice keys
+export const ELEVENLABS_API_KEY = getEnv("ELEVENLABS_API_KEY");
+
+export const DEEPGRAM_API_KEY = getEnv("DEEPGRAM_API_KEY");
+export const DEEPGRAM_WS_URL = getEnv("DEEPGRAM_WS_URL");

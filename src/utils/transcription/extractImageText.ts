@@ -1,14 +1,20 @@
 // src\utils\transcription\extractImageText.ts
-import { visionClient } from "../../config/visionClient";
+import { visionClient } from "@/lib/clients/visionClient";
 
 export const extractImageText = async (buffer: Buffer): Promise<string> => {
   //console.log("📤 Sending image buffer to Google Vision API...");
   //console.log("📦 Buffer size (bytes):", buffer.length);
 
   try {
-    const [result] = await visionClient.textDetection({ image: { content: buffer } });
+    const [result] = await visionClient.textDetection({
+      image: { content: buffer },
+    });
 
-    if (!result || !result.textAnnotations || result.textAnnotations.length === 0) {
+    if (
+      !result ||
+      !result.textAnnotations ||
+      result.textAnnotations.length === 0
+    ) {
       console.warn("⚠️ No text detected in image.");
       return "";
     }
